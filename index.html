@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mamadou Ba — Géomatique &amp; Télédétection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* =====================================================
+   ============  À MODIFIER FACILEMENT  =================
+   Cette section contient les variables de couleurs.
+   Tu peux changer les couleurs ici si tu veux.
+   ===================================================== */
+:root{
+  --ivoire: #F7F4ED;
+  --ivoire-2: #EFEADD;
+  --encre: #1C2B24;
+  --encre-soft: #3A4A40;
+  --terracotta: #C9622D;
+  --terracotta-soft: #E0935F;
+  --ardoise: #3D5A6C;
+  --ardoise-soft: #6E8997;
+  --ligne: #C9C2AE;
+  --blanc: #FFFDF9;
+
+  --display: 'Fraunces', serif;
+  --corps: 'Space Grotesk', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--ivoire);
+  color:var(--encre);
+  font-family:var(--corps);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+::selection{background:var(--terracotta-soft);color:var(--blanc);}
+
+a{color:inherit;text-decoration:none;}
+
+/* ---------- Texture de fond carte topo ---------- */
+.topo-bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  opacity:0.05;
+  pointer-events:none;
+  background-image:
+    repeating-radial-gradient(circle at 20% 30%, transparent 0, transparent 38px, var(--encre) 39px, transparent 40px),
+    repeating-radial-gradient(circle at 80% 70%, transparent 0, transparent 52px, var(--encre) 53px, transparent 54px);
+}
+
+/* ===================== LAYOUT GENERAL ===================== */
+.shell{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  min-height:100vh;
+  position:relative;
+  z-index:1;
+}
+
+/* ---------- Légende latérale (nav) ---------- */
+.legende{
+  position:sticky;
+  top:0;
+  height:100vh;
+  border-right:1px solid var(--ligne);
+  padding:2.5rem 1.75rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.legende-haut .monogramme{
+  font-family:var(--display);
+  font-size:2rem;
+  font-weight:600;
+  letter-spacing:-0.02em;
+  line-height:1.1;
+  margin-bottom:0.4rem;
+}
+
+.legende-haut .role{
+  font-family:var(--mono);
+  font-size:0.7rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--ardoise);
+  margin-bottom:2.5rem;
+}
+
+.legende-nav{
+  display:flex;
+  flex-direction:column;
+  gap:0.9rem;
+}
+
+.legende-nav a{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--encre-soft);
+  display:flex;
+  align-items:baseline;
+  gap:0.5rem;
+  transition:color 0.2s ease, padding-left 0.2s ease;
+  padding-left:0;
+}
+
+.legende-nav a .tiret{
+  color:var(--terracotta);
+  opacity:0;
+  transition:opacity 0.2s ease;
+}
+
+.legende-nav a:hover{
+  color:var(--terracotta);
+  padding-left:0.3rem;
+}
+.legende-nav a:hover .tiret{opacity:1;}
+
+.legende-bas{
+  font-family:var(--mono);
+  font-size:0.7rem;
+  color:var(--ardoise-soft);
+  line-height:1.8;
+}
+
+.legende-bas a{border-bottom:1px solid var(--ligne);}
+.legende-bas a:hover{color:var(--terracotta);border-color:var(--terracotta);}
+
+/* ---------- Contenu principal ---------- */
+.contenu{
+  padding:0 0 0 0;
+}
+
+section{
+  padding:5.5rem 4.5rem;
+  border-bottom:1px solid var(--ligne);
+  position:relative;
+}
+
+/* coordonnées en coin façon carte (decoratif) */
+.coord{
+  position:absolute;
+  font-family:var(--mono);
+  font-size:0.65rem;
+  color:var(--ligne);
+  letter-spacing:0.05em;
+}
+.coord.tl{top:1.2rem;left:1.2rem;}
+.coord.tr{top:1.2rem;right:1.2rem;}
+
+/* ===================== HERO ===================== */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:4rem;
+  padding-bottom:4rem;
+}
+
+.hero .eyebrow{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--terracotta);
+  margin-bottom:1.5rem;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+.hero .eyebrow::before{
+  content:'';
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--terracotta);
+  display:inline-block;
+}
+
+.hero h1{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:clamp(2.6rem, 6vw, 5rem);
+  line-height:1.02;
+  letter-spacing:-0.01em;
+  max-width:16ch;
+  margin-bottom:1.8rem;
+}
+.hero h1 em{
+  font-style:italic;
+  color:var(--terracotta);
+  font-weight:500;
+}
+
+.hero p.lead{
+  font-size:1.15rem;
+  color:var(--encre-soft);
+  max-width:46ch;
+  margin-bottom:2.5rem;
+}
+
+.hero .stats{
+  display:flex;
+  gap:3rem;
+  margin-top:1rem;
+  flex-wrap:wrap;
+}
+.hero .stat .num{
+  font-family:var(--display);
+  font-size:2.1rem;
+  font-weight:600;
+  color:var(--ardoise);
+}
+.hero .stat .label{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  color:var(--encre-soft);
+}
+
+/* ===================== TITRES DE SECTION ===================== */
+.section-head{
+  display:flex;
+  align-items:baseline;
+  gap:1.2rem;
+  margin-bottom:3rem;
+}
+.section-head .indice{
+  font-family:var(--mono);
+  font-size:0.8rem;
+  color:var(--terracotta);
+  border:1px solid var(--terracotta);
+  padding:0.15rem 0.5rem;
+  border-radius:2px;
+}
+.section-head h2{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:2.1rem;
+  letter-spacing:-0.01em;
+}
+.section-head .ligne{
+  flex:1;
+  height:1px;
+  background:var(--ligne);
+}
+
+/* ===================== PROFIL / À PROPOS ===================== */
+.profil-grid{
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:4rem;
+  align-items:start;
+}
+.profil-photo{
+  width:100%;
+  aspect-ratio:3/4;
+  background:var(--ivoire-2);
+  border:1px solid var(--ligne);
+  border-radius:4px;
+  overflow:hidden;
+  position:relative;
+}
+.profil-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.profil-photo .tag{
+  position:absolute;
+  bottom:0.8rem;left:0.8rem;
+  background:var(--encre);
+  color:var(--ivoire);
+  font-family:var(--mono);
+  font-size:0.62rem;
+  padding:0.3rem 0.6rem;
+  letter-spacing:0.04em;
+}
+
+.profil-texte p{
+  font-size:1.02rem;
+  color:var(--encre-soft);
+  margin-bottom:1.3rem;
+  max-width:62ch;
+}
+.profil-texte strong{color:var(--encre);font-weight:600;}
+
+.langues{
+  display:flex;
+  gap:2.5rem;
+  margin-top:2rem;
+  flex-wrap:wrap;
+}
+.langue{
+  font-family:var(--mono);
+  font-size:0.78rem;
+}
+.langue .niveau{color:var(--ardoise);}
+
+/* ===================== COMPETENCES ===================== */
+.comp-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:0;
+  border:1px solid var(--ligne);
+}
+.comp-col{
+  padding:2rem 1.8rem;
+  border-right:1px solid var(--ligne);
+}
+.comp-col:last-child{border-right:none;}
+.comp-col h3{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--terracotta);
+  margin-bottom:1.2rem;
+  padding-bottom:0.8rem;
+  border-bottom:1px solid var(--ligne);
+}
+.comp-col ul{list-style:none;}
+.comp-col li{
+  font-size:0.92rem;
+  color:var(--encre-soft);
+  padding:0.35rem 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.niveau-bar{
+  display:flex;
+  gap:2px;
+}
+.niveau-bar span{
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--ligne);
+}
+.niveau-bar span.actif{background:var(--ardoise);}
+
+/* ===================== EXPERIENCE (timeline) ===================== */
+.exp-item{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:2.5rem;
+  padding:2.2rem 0;
+  border-top:1px solid var(--ligne);
+}
+.exp-item:first-of-type{border-top:none;}
+
+.exp-date{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  color:var(--ardoise);
+  padding-top:0.2rem;
+}
+
+.exp-poste{
+  font-family:var(--display);
+  font-size:1.35rem;
+  font-weight:600;
+  margin-bottom:0.3rem;
+}
+.exp-orga{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  color:var(--terracotta);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  margin-bottom:0.9rem;
+}
+.exp-desc{
+  color:var(--encre-soft);
+  font-size:0.97rem;
+  max-width:62ch;
+}
+.exp-tags{
+  display:flex;
+  gap:0.5rem;
+  margin-top:1rem;
+  flex-wrap:wrap;
+}
+.exp-tags span{
+  font-family:var(--mono);
+  font-size:0.66rem;
+  border:1px solid var(--ligne);
+  color:var(--encre-soft);
+  padding:0.2rem 0.55rem;
+  border-radius:20px;
+}
+
+.lien-detail{
+  display:inline-flex;
+  align-items:center;
+  gap:0.4rem;
+  margin-top:1rem;
+  font-family:var(--mono);
+  font-size:0.78rem;
+  color:var(--ardoise);
+  border-bottom:1px solid var(--ardoise-soft);
+  padding-bottom:0.15rem;
+  transition:color 0.2s, border-color 0.2s, gap 0.2s;
+}
+.lien-detail:hover{color:var(--terracotta);border-color:var(--terracotta);gap:0.6rem;}
+
+/* ===================== PROJETS / PORTFOLIO ===================== */
+.projets-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:1px;
+  background:var(--ligne);
+  border:1px solid var(--ligne);
+}
+.projet-card{
+  background:var(--ivoire);
+  padding:0;
+  display:flex;
+  flex-direction:column;
+}
+.projet-visuel{
+  aspect-ratio:16/10;
+  background:var(--ivoire-2);
+  border-bottom:1px solid var(--ligne);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.projet-visuel img{width:100%;height:100%;object-fit:cover;display:block;}
+.projet-visuel .placeholder-note{
+  font-family:var(--mono);
+  font-size:0.7rem;
+  color:var(--ardoise-soft);
+  text-align:center;
+  padding:1rem;
+  line-height:1.6;
+}
+.projet-cat{
+  position:absolute;
+  top:0.8rem;left:0.8rem;
+  background:var(--encre);
+  color:var(--ivoire);
+  font-family:var(--mono);
+  font-size:0.6rem;
+  padding:0.28rem 0.6rem;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.projet-corps{
+  padding:1.8rem 1.8rem 2.2rem;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.projet-corps h3{
+  font-family:var(--display);
+  font-size:1.25rem;
+  font-weight:600;
+  margin-bottom:0.6rem;
+}
+.projet-corps p{
+  color:var(--encre-soft);
+  font-size:0.92rem;
+  flex:1;
+  margin-bottom:1.2rem;
+}
+.projet-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-family:var(--mono);
+  font-size:0.7rem;
+  color:var(--ardoise);
+}
+
+/* ===================== FORMATION ===================== */
+.form-list{
+  display:flex;
+  flex-direction:column;
+}
+.form-item{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:2.5rem;
+  padding:1.4rem 0;
+  border-top:1px solid var(--ligne);
+}
+.form-item:first-child{border-top:none;}
+.form-annee{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  color:var(--ardoise);
+}
+.form-titre{
+  font-weight:600;
+  font-size:0.98rem;
+  margin-bottom:0.2rem;
+}
+.form-lieu{
+  font-size:0.86rem;
+  color:var(--encre-soft);
+}
+
+/* ===================== CERTIFICATIONS (tampons) ===================== */
+.certif-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:1.2rem;
+}
+.certif-tampon{
+  border:1.5px dashed var(--ardoise-soft);
+  border-radius:50%;
+  aspect-ratio:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:1.2rem;
+  position:relative;
+  transition:border-color 0.25s, transform 0.25s;
+}
+.certif-tampon:hover{border-color:var(--terracotta);transform:rotate(-2deg);}
+.certif-tampon .annee{
+  font-family:var(--mono);
+  font-size:0.65rem;
+  color:var(--terracotta);
+  text-transform:uppercase;
+  margin-bottom:0.4rem;
+}
+.certif-tampon .nom{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:0.88rem;
+  line-height:1.25;
+}
+.certif-tampon .org{
+  font-family:var(--mono);
+  font-size:0.62rem;
+  color:var(--encre-soft);
+  margin-top:0.4rem;
+}
+
+/* ===================== CONTACT / FOOTER ===================== */
+.contact-section{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  flex-wrap:wrap;
+  gap:2rem;
+}
+.contact-section h2{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:clamp(2rem, 5vw, 3.4rem);
+  max-width:18ch;
+  line-height:1.05;
+}
+.contact-liens{
+  display:flex;
+  flex-direction:column;
+  gap:0.7rem;
+  align-items:flex-end;
+}
+.contact-liens a{
+  font-family:var(--mono);
+  font-size:0.95rem;
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  color:var(--encre-soft);
+  transition:color 0.2s;
+}
+.contact-liens a:hover{color:var(--terracotta);}
+.contact-liens a .ico{color:var(--terracotta);}
+
+.footer-bas{
+  padding:1.5rem 4.5rem;
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--mono);
+  font-size:0.68rem;
+  color:var(--ardoise-soft);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px){
+  .shell{grid-template-columns:1fr;}
+  .legende{
+    position:relative;
+    height:auto;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding:1.2rem 1.5rem;
+  }
+  .legende-haut{display:flex;align-items:baseline;gap:0.8rem;}
+  .legende-haut .monogramme{font-size:1.3rem;margin-bottom:0;}
+  .legende-haut .role{margin-bottom:0;}
+  .legende-nav{display:none;}
+  .legende-bas{display:none;}
+  section{padding:3.5rem 1.5rem;}
+  .profil-grid{grid-template-columns:1fr;}
+  .comp-grid{grid-template-columns:1fr;}
+  .comp-col{border-right:none;border-bottom:1px solid var(--ligne);}
+  .projets-grid{grid-template-columns:1fr;}
+  .exp-item, .form-item{grid-template-columns:1fr;gap:0.6rem;}
+  .certif-grid{grid-template-columns:repeat(2,1fr);}
+  .contact-section{flex-direction:column;align-items:flex-start;}
+  .contact-liens{align-items:flex-start;}
+  .footer-bas{padding:1.2rem 1.5rem;flex-direction:column;gap:0.4rem;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="topo-bg"></div>
+
+<div class="shell">
+
+  <!-- ===================================================
+       LÉGENDE LATÉRALE (navigation)
+       =================================================== -->
+  <aside class="legende">
+    <div class="legende-haut">
+      <div class="monogramme">M.&nbsp;Ba</div>
+      <div class="role">Géomatique &amp; Télédétection</div>
+      <nav class="legende-nav">
+        <a href="#profil"><span class="tiret">—</span> Profil</a>
+        <a href="#competences"><span class="tiret">—</span> Compétences</a>
+        <a href="#experience"><span class="tiret">—</span> Expérience</a>
+        <a href="#projets"><span class="tiret">—</span> Projets</a>
+        <a href="#formation"><span class="tiret">—</span> Formation</a>
+        <a href="#certifications"><span class="tiret">—</span> Certifications</a>
+        <a href="#contact"><span class="tiret">—</span> Contact</a>
+      </nav>
+    </div>
+    <div class="legende-bas">
+      Compiègne, France<br>
+      <a href="mailto:mamadouba7001@gmail.com">mamadouba7001@gmail.com</a><br>
+      <a href="tel:+33677753022">+33 6 77 75 30 22</a>
+    </div>
+  </aside>
+
+  <!-- ===================================================
+       CONTENU PRINCIPAL
+       =================================================== -->
+  <main class="contenu">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <span class="coord tr">60°12'N · COMPIÈGNE</span>
+      <div class="eyebrow">Disponible · Poste actuel ONF</div>
+      <h1>Je transforme la <em>donnée spatiale</em> en décisions concrètes.</h1>
+      <p class="lead">
+        Responsable Géomatique &amp; Foncier à l'Office National des Forêts.
+        Spécialiste télédétection, SIG et développement d'outils web pour
+        l'aménagement du territoire — entre France et Sénégal.
+      </p>
+      <div class="stats">
+        <div class="stat">
+          <div class="num">3+</div>
+          <div class="label">Ans d'expérience SIG</div>
+        </div>
+        <div class="stat">
+          <div class="num">7</div>
+          <div class="label">Certifications récentes</div>
+        </div>
+        <div class="stat">
+          <div class="num">5</div>
+          <div class="label">Diplômes universitaires</div>
+        </div>
+        <div class="stat">
+          <div class="num">3</div>
+          <div class="label">Langues parlées</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROFIL ============ -->
+    <section id="profil">
+      <span class="coord tl">01 / PROFIL</span>
+      <div class="section-head">
+        <span class="indice">01</span>
+        <h2>Profil</h2>
+        <span class="ligne"></span>
+      </div>
+      <div class="profil-grid">
+        <div class="profil-photo">
+          <!-- 
+            ==========================================================
+            POUR REMPLACER LA PHOTO : remplace "PLACEHOLDER-PHOTO.jpg" 
+            par le chemin de ta photo (ex: "photo-mamadou.jpg") et mets 
+            le fichier image dans le même dossier que ce fichier html.
+            ==========================================================
+          -->
+          <img class="img-fallback" data-fallback="Ta photo ici&lt;br&gt;(remplace PLACEHOLDER-PHOTO.jpg)" src="PLACEHOLDER-PHOTO.jpg" alt="Photo de Mamadou Ba">
+          <div class="tag">M. BA — ONF Compiègne</div>
+        </div>
+        <div class="profil-texte">
+          <p>
+            Géomaticien spécialisé en <strong>télédétection et géomatique appliquées à l'environnement</strong>,
+            je travaille depuis octobre 2023 comme <strong>Responsable Géomatique et Foncier</strong> à l'Agence
+            Territoriale de Compiègne de l'ONF. J'y administre les bases de données géographiques, pilote
+            le réseau SIG, forme les équipes, et développe des applications web et mobiles pour le traitement
+            des dossiers fonciers (soumissions, alinéations, échanges, PLUi, projets éoliens).
+          </p>
+          <p>
+            Mon parcours combine un double Master en télédétection (Paris 1 Panthéon-Sorbonne / Paris Cité)
+            et une solide expérience de terrain entre la France et le Sénégal — de la modélisation de
+            biomasse satellite à l'analyse de l'impact d'infrastructures sur le tissu urbain de Dakar.
+          </p>
+          <p>
+            Je développe également des outils web sur mesure (Next.js, Supabase, cartographie interactive)
+            pour des problématiques de suivi institutionnel, en plus de mon expertise SIG/télédétection classique.
+          </p>
+          <div class="langues">
+            <div class="langue">Français <span class="niveau">— langue maternelle</span></div>
+            <div class="langue">Wolof <span class="niveau">— langue maternelle</span></div>
+            <div class="langue">Anglais <span class="niveau">— B1</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COMPETENCES ============ -->
+    <section id="competences">
+      <span class="coord tl">02 / COMPÉTENCES</span>
+      <div class="section-head">
+        <span class="indice">02</span>
+        <h2>Compétences</h2>
+        <span class="ligne"></span>
+      </div>
+      <div class="comp-grid">
+        <div class="comp-col">
+          <h3>SIG &amp; Cartographie</h3>
+          <ul>
+            <li>QGIS <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>ArcGIS / ArcGIS Pro <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>PostgreSQL/PostGIS <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>QField, GRASS, SAGA <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>GDAL / FME <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+          </ul>
+        </div>
+        <div class="comp-col">
+          <h3>Télédétection &amp; Dev</h3>
+          <ul>
+            <li>Python / PyQGIS <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Google Earth Engine <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>R-Studio, ENVI, SNAP <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Leaflet / OpenLayers <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>HTML / PHP / CSS <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+          </ul>
+        </div>
+        <div class="comp-col">
+          <h3>Foncier &amp; Méthode</h3>
+          <ul>
+            <li>Procédures foncières <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Gestion intégrée de l'eau <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Git / GitLab <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Formation &amp; pédagogie <span class="niveau-bar"><span class="actif"></span><span class="actif"></span><span class="actif"></span><span class="actif"></span></span></li>
+            <li>Merise / Power AMC <span class="niveau-bar"><span class="actif"></span><span class="actif"></span></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section id="experience">
+      <span class="coord tl">03 / EXPÉRIENCE</span>
+      <div class="section-head">
+        <span class="indice">03</span>
+        <h2>Expérience</h2>
+        <span class="ligne"></span>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">2023 — présent</div>
+        <div>
+          <div class="exp-poste">Responsable Géomatique et Foncier</div>
+          <div class="exp-orga">ONF — Agence Territoriale de Compiègne</div>
+          <p class="exp-desc">
+            Administration et gestion des bases de données géographiques, responsable du réseau SIG
+            et formateur, développeur d'applications web et mobile, traitement des dossiers fonciers
+            (soumission, distraction, alinéation, échanges, PLUi, projets éoliens).
+          </p>
+          <div class="exp-tags">
+            <span>SIG</span><span>Foncier</span><span>PostGIS</span><span>Formation</span><span>Dev web/mobile</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">Fév. — Juil. 2023</div>
+        <div>
+          <div class="exp-poste">Stagiaire Géomatique &amp; Télédétection</div>
+          <div class="exp-orga">Wanaka — Paris</div>
+          <p class="exp-desc">
+            Élaboration d'un modèle d'estimation de biomasse de colza à partir d'images satellites
+            Landsat 8/9 et de données terrain Terres Inovia. Automatisation d'une méthode de conseil
+            en fertilisation azotée sur blé combinant données satellite et potentiel de sol.
+          </p>
+          <div class="exp-tags">
+            <span>Landsat 8/9</span><span>Python</span><span>Agronomie satellite</span>
+          </div>
+          <a href="#projet-wanaka" class="lien-detail">→ Voir le projet en détail</a>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">2022</div>
+        <div>
+          <div class="exp-poste">Assistant ingénieur puis stagiaire Géomatique</div>
+          <div class="exp-orga">Tribu Concevoir Durable — Paris</div>
+          <p class="exp-desc">
+            Modélisation graphique et informatique du projet RECRE (Renaturation des Espaces des Cours
+            vers la Résilience Écologique). Conception d'une base de données, cartographie interactive
+            et scripts de modélisation.
+          </p>
+          <div class="exp-tags">
+            <span>Cartographie interactive</span><span>Modélisation</span><span>Bases de données</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">2018 — 2021</div>
+        <div>
+          <div class="exp-poste">Expériences antérieures</div>
+          <div class="exp-orga">Enquêtes de terrain &amp; animation — Dakar / Paris</div>
+          <p class="exp-desc">
+            Enquêtes de terrain géolocalisées pour deux thèses universitaires (Université Cheikh Anta
+            Diop de Dakar) sur la répartition des points d'eau et l'impact urbain d'infrastructures
+            routières, ainsi qu'une expérience d'animation périscolaire à la Mairie de Paris.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROJETS ============ -->
+    <section id="projets">
+      <span class="coord tl">04 / PROJETS</span>
+      <div class="section-head">
+        <span class="indice">04</span>
+        <h2>Projets &amp; réalisations</h2>
+        <span class="ligne"></span>
+      </div>
+
+      <div class="projets-grid">
+
+        <!-- PROJET 1 : ONF -->
+        <div class="projet-card" id="projet-onf">
+          <div class="projet-visuel">
+            <!-- 
+              REMPLACE "PLACEHOLDER-ONF.jpg" par une capture d'écran 
+              de ta carte/appli foncière ONF (mets le fichier dans le dossier)
+            -->
+            <img class="img-fallback" data-fallback="Capture d&#39;écran à ajouter&lt;br&gt;(ex: carte foncière, dashboard réseau SIG)" src="PLACEHOLDER-ONF.jpg" alt="Carte foncière ONF">
+            <span class="projet-cat">SIG · Foncier</span>
+          </div>
+          <div class="projet-corps">
+            <h3>Gestion foncière &amp; réseau SIG — ONF</h3>
+            <p>
+              Pilotage du réseau SIG de l'agence territoriale : structuration des bases de données
+              géographiques, automatisation des procédures foncières et accompagnement des équipes
+              sur les dossiers de soumission, alinéation et projets éoliens.
+            </p>
+            <div class="projet-meta">
+              <span>QGIS · PostGIS · FME</span>
+              <span>2023 — présent</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJET 2 : Wanaka biomasse colza -->
+        <div class="projet-card" id="projet-wanaka">
+          <div class="projet-visuel">
+            <img class="img-fallback" data-fallback="Capture d&#39;écran à ajouter&lt;br&gt;(ex: carte de biomasse, graphe de modèle)" src="PLACEHOLDER-WANAKA.jpg" alt="Modèle de biomasse colza satellite">
+            <span class="projet-cat">Télédétection</span>
+          </div>
+          <div class="projet-corps">
+            <h3>Estimation de biomasse colza par satellite</h3>
+            <p>
+              Modèle d'estimation de biomasse à partir d'images Landsat 8/9 croisées avec des données
+              terrain Terres Inovia, puis automatisation d'un conseil en fertilisation azotée sur blé
+              à partir de l'état végétatif satellite et du potentiel de sol.
+            </p>
+            <div class="projet-meta">
+              <span>Landsat · Python · R</span>
+              <span>Wanaka, 2023</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJET 3 : Leaflet cartographie association -->
+        <div class="projet-card" id="projet-leaflet">
+          <div class="projet-visuel">
+            <img class="img-fallback" data-fallback="Capture d&#39;écran à ajouter&lt;br&gt;(ex: ta carte Leaflet avec les marqueurs)" src="PLACEHOLDER-LEAFLET.jpg" alt="Carte interactive Leaflet membres association">
+            <span class="projet-cat">Webmapping</span>
+          </div>
+          <div class="projet-corps">
+            <h3>Carte interactive des membres d'une association</h3>
+            <p>
+              Application de cartographie interactive développée avec Leaflet, connectée à une base
+              Supabase, avec géocodage adapté aux villes africaines et zoom automatique depuis la
+              recherche d'un membre.
+            </p>
+            <div class="projet-meta">
+              <span>Leaflet · Supabase</span>
+              <span>Projet perso</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJET 4 : DGUA SE -->
+        <div class="projet-card" id="projet-dgua">
+          <div class="projet-visuel">
+            <img class="img-fallback" data-fallback="Capture d&#39;écran à ajouter&lt;br&gt;(ex: dashboard DGUA·SE, graphiques KPI)" src="PLACEHOLDER-DGUA.jpg" alt="Application DGUA SE suivi évaluation urbanisme">
+            <span class="projet-cat">Dev web · Dashboard</span>
+          </div>
+          <div class="projet-corps">
+            <h3>DGUA·SE — Suivi-évaluation urbanisme (Sénégal)</h3>
+            <p>
+              Application web multi-onglets de suivi-évaluation des activités d'urbanisme pour la
+              Direction Générale de l'Urbanisme et de l'Architecture, avec visualisations de tendances,
+              alertes réglementaires et export Excel/PDF.
+            </p>
+            <div class="projet-meta">
+              <span>Next.js · Supabase · Chart.js</span>
+              <span>Projet perso</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ FORMATION ============ -->
+    <section id="formation">
+      <span class="coord tl">05 / FORMATION</span>
+      <div class="section-head">
+        <span class="indice">05</span>
+        <h2>Formation</h2>
+        <span class="ligne"></span>
+      </div>
+      <div class="form-list">
+        <div class="form-item">
+          <div class="form-annee">2022—2023</div>
+          <div>
+            <div class="form-titre">Master 2 — Télédétection et Géomatique Appliquées à l'Environnement</div>
+            <div class="form-lieu">Université Paris 1 Panthéon-Sorbonne, co-habilité Université Paris Cité</div>
+          </div>
+        </div>
+        <div class="form-item">
+          <div class="form-annee">2021—2022</div>
+          <div>
+            <div class="form-titre">Maîtrise — Géomatique, Limnologie, Environnement, Territoires</div>
+            <div class="form-lieu">Université d'Orléans</div>
+          </div>
+        </div>
+        <div class="form-item">
+          <div class="form-annee">2020—2021</div>
+          <div>
+            <div class="form-titre">Master 1 — Territoires et Développement Durable</div>
+            <div class="form-lieu">Université Sorbonne Paris Nord</div>
+          </div>
+        </div>
+        <div class="form-item">
+          <div class="form-annee">2019—2020</div>
+          <div>
+            <div class="form-titre">Licence 3 — Géographie et Aménagement</div>
+            <div class="form-lieu">Université de Rouen</div>
+          </div>
+        </div>
+        <div class="form-item">
+          <div class="form-annee">2016—2018</div>
+          <div>
+            <div class="form-titre">Licence 3 puis Master 1 — Géographie Physique</div>
+            <div class="form-lieu">Université Cheikh Anta Diop de Dakar, Sénégal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CERTIFICATIONS ============ -->
+    <section id="certifications">
+      <span class="coord tl">06 / CERTIFICATIONS</span>
+      <div class="section-head">
+        <span class="indice">06</span>
+        <h2>Certifications</h2>
+        <span class="ligne"></span>
+      </div>
+      <div class="certif-grid">
+        <div class="certif-tampon">
+          <div class="annee">Juin 2026</div>
+          <div class="nom">ArcGIS Experience Builder</div>
+          <div class="org">ESRI France</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Oct. 2024</div>
+          <div class="nom">FME Avancé</div>
+          <div class="org">VEREMES</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Oct. 2024</div>
+          <div class="nom">Spécialiste Géomatique</div>
+          <div class="org">NAOMIS</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Oct. 2024</div>
+          <div class="nom">Procédures foncières avancées</div>
+          <div class="org">ONF</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Avril 2024</div>
+          <div class="nom">Analyses &amp; traitements rasters</div>
+          <div class="org">NAOMIS</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Avril 2024</div>
+          <div class="nom">Python pour ArcGIS</div>
+          <div class="org">AgroParisTech</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Mars 2024</div>
+          <div class="nom">Procédures foncières initiales</div>
+          <div class="org">ONF</div>
+        </div>
+        <div class="certif-tampon">
+          <div class="annee">Juillet 2019</div>
+          <div class="nom">SIG sur QGIS &amp; AutoCAD</div>
+          <div class="org">Univ. Kwame Nkrumah (Ghana) &amp; Dakar</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" style="border-bottom:none;">
+      <span class="coord tl">07 / CONTACT</span>
+      <div class="contact-section">
+        <h2>Discutons de votre prochain projet géospatial.</h2>
+        <div class="contact-liens">
+          <a href="mailto:mamadouba7001@gmail.com"><span class="ico">✉</span> mamadouba7001@gmail.com</a>
+          <a href="tel:+33677753022"><span class="ico">☏</span> +33 6 77 75 30 22</a>
+          <a href="#"><span class="ico">in</span> linkedin.com/in/mamadou-ba <!-- remplace # par ton lien LinkedIn --></a>
+          <a href="#"><span class="ico">⌥</span> github.com/mamadouba1</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-bas">
+      <span>© 2026 Mamadou Ba</span>
+      <span>3 Avenue de la Libération, 60200 Compiègne</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// Gestion robuste des images manquantes (placeholders).
+// Si une image ne charge pas, on affiche un message à la place
+// sans jamais toucher au HTML du parent (pour éviter tout bug).
+document.querySelectorAll('img.img-fallback').forEach(function(img){
+  img.addEventListener('error', function(){
+    if (img.dataset.fallbackApplied) return; // évite les boucles
+    img.dataset.fallbackApplied = 'true';
+    img.style.display = 'none';
+
+    var note = document.createElement('span');
+    note.className = 'placeholder-note';
+    note.innerHTML = img.dataset.fallback || "Image à ajouter";
+    note.style.display = 'flex';
+    note.style.alignItems = 'center';
+    note.style.justifyContent = 'center';
+    note.style.height = '100%';
+    note.style.width = '100%';
+    note.style.textAlign = 'center';
+
+    img.insertAdjacentElement('afterend', note);
+  });
+});
+</script>
+</body>
+</html>
