@@ -830,6 +830,120 @@ section{
   text-align:right;
 }
 
+/* ===================== PROJETS (grille de cartes) ===================== */
+.projets-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:1.75rem;
+}
+.projet-carte{
+  border:1px solid var(--ligne);
+  border-radius:6px;
+  overflow:hidden;
+  background:var(--blanc);
+  display:flex;
+  flex-direction:column;
+  transition:box-shadow 0.25s ease, transform 0.25s ease;
+}
+.projet-carte:hover{
+  box-shadow:0 8px 24px rgba(28,43,36,0.10);
+  transform:translateY(-2px);
+}
+.projet-carte-img-wrap{
+  aspect-ratio:16/10;
+  overflow:hidden;
+  background:var(--ivoire-2);
+  border-bottom:1px solid var(--ligne);
+  cursor:zoom-in;
+  position:relative;
+}
+.projet-carte-img-wrap img{
+  width:100%;height:100%;
+  object-fit:cover;
+  object-position:top center;
+  display:block;
+  transition:transform 0.4s ease;
+}
+.projet-carte:hover .projet-carte-img-wrap img{transform:scale(1.05);}
+.projet-carte-body{
+  padding:1.3rem 1.4rem 1.5rem;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+.projet-carte-meta{
+  font-family:var(--mono);
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--terracotta);
+  margin-bottom:0.4rem;
+}
+.projet-carte-titre{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:1.08rem;
+  color:var(--encre);
+  line-height:1.25;
+  margin-bottom:0.5rem;
+}
+.projet-carte-desc{
+  font-size:0.85rem;
+  color:var(--encre-soft);
+  line-height:1.55;
+  text-align:justify;
+  margin-bottom:0.9rem;
+  flex:1;
+}
+.projet-carte-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.35rem;
+}
+.projet-carte-tags span{
+  font-family:var(--mono);
+  font-size:0.6rem;
+  border:1px solid var(--ligne);
+  color:var(--encre-soft);
+  padding:0.18rem 0.55rem;
+  border-radius:20px;
+}
+.projet-carte-img-wrap .placeholder-note{
+  display:flex;align-items:center;justify-content:center;
+  height:100%;width:100%;
+  font-family:var(--mono);font-size:0.65rem;
+  color:var(--ardoise-soft);text-align:center;padding:1rem;
+  background:var(--ivoire-2);
+}
+
+/* Lightbox (agrandissement au clic sur une capture) */
+#lightbox-overlay{
+  position:fixed;inset:0;
+  background:rgba(28,43,36,0.92);
+  display:none;
+  align-items:center;justify-content:center;
+  z-index:2000;
+  padding:2rem;
+  cursor:zoom-out;
+}
+#lightbox-overlay.ouvert{display:flex;}
+#lightbox-overlay img{
+  max-width:100%;max-height:100%;
+  border-radius:4px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+#lightbox-overlay .lightbox-close{
+  position:absolute;top:1.2rem;right:1.2rem;
+  color:var(--ivoire);
+  font-family:var(--mono);
+  font-size:0.78rem;
+  border:1px solid var(--ivoire);
+  padding:0.4rem 0.9rem;
+  border-radius:3px;
+  cursor:pointer;
+  background:none;
+}
+
 /* ===================== CONTACT / FOOTER ===================== */
 .contact-section{
   display:flex;
@@ -908,7 +1022,10 @@ section{
   .comp-col{border-bottom:1px solid var(--ligne);}
   .comp-col:nth-child(even){border-right:none;}
   .comp-col:last-child{border-right:none;}
-  .projets-grid{grid-template-columns:1fr;}
+  .projets-grid{grid-template-columns:1fr;gap:1.2rem;}
+  .projet-carte-img-wrap{aspect-ratio:16/11;}
+  .projet-carte-body{padding:1.1rem 1.2rem 1.3rem;}
+  #lightbox-overlay{padding:1rem;}
   .projet-ligne { grid-template-columns: 24px 1fr; grid-template-areas: "icon titre" ". desc" ". stack" ". date"; row-gap: 0.2rem; }
   .projet-icone { grid-area: icon; }
   .projet-ligne-titre { grid-area: titre; }
@@ -1138,6 +1255,7 @@ section{
         <a href="#profil"><span class="tiret">—</span> Profil</a>
         <a href="#competences"><span class="tiret">—</span> Compétences</a>
         <a href="#experience"><span class="tiret">—</span> Parcours</a>
+        <a href="#projets"><span class="tiret">—</span> Projets</a>
         <a href="#certifications"><span class="tiret">—</span> Certifications</a>
         <a href="#contact"><span class="tiret">—</span> Contact</a>
       </nav>
@@ -1344,12 +1462,123 @@ section{
       </div>
     </section>
 
+    <!-- ============ PROJETS & RÉALISATIONS ============ -->
+    <section id="projets">
+      <span class="coord tl">04 / PROJETS</span>
+      <div class="section-head">
+        <span class="indice">04</span>
+        <h2>Projets &amp; Réalisations</h2>
+        <span class="ligne"></span>
+      </div>
+      <div class="projets-grid">
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/sig-dt-seine-nord.jpg"
+                 alt="Portail SIG et desserte forestière DT Seine Nord">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2023 — présent · ONF</span>
+            <div class="projet-carte-titre">Portail SIG &amp; desserte forestière — DT Seine Nord</div>
+            <p class="projet-carte-desc">Développement et administration du portail SIG de la direction territoriale Seine Nord (ArcGIS Enterprise / Experience Builder) : cartographie et suivi de la desserte forestière avec tableau de bord d'indicateurs kilométriques par revêtement, statut, accessibilité et circulation.</p>
+            <div class="projet-carte-tags"><span>ArcGIS Enterprise</span><span>Experience Builder</span><span>Dashboard</span><span>PostGIS</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/pointage-ate-compiegne.jpg"
+                 alt="Pointage ATE Compiègne">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2024 · ONF — Agence de Compiègne</span>
+            <div class="projet-carte-titre">Pointage ATE Compiègne — Patrimoine &amp; biodiversité</div>
+            <p class="projet-carte-desc">Application de pointage terrain pour le suivi des arbres remarquables et porte-graines, du petit patrimoine, de la faune-flore, des habitats humides et des chablis / arbres dangereux sur l'ensemble du massif forestier.</p>
+            <div class="projet-carte-tags"><span>ArcGIS</span><span>Suivi biodiversité</span><span>Patrimoine forestier</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/quickcapture-dfci.jpg"
+                 alt="Application QuickCapture DFCI">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2024 · ONF</span>
+            <div class="projet-carte-titre">Application QuickCapture — Infrastructures DFCI</div>
+            <p class="projet-carte-desc">Conception d'un formulaire QuickCapture pour la remontée terrain rapide des infrastructures DFCI (barrières, aires de retournement, points noirs de circulation, zones de croisement) avec géolocalisation directe.</p>
+            <div class="projet-carte-tags"><span>QuickCapture</span><span>DFCI</span><span>Terrain</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/survey123-emerge.jpg"
+                 alt="Application Survey123 Emerge">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2024 · ONF</span>
+            <div class="projet-carte-titre">Application Survey123 — Suivi sylvicole (Emerge)</div>
+            <p class="projet-carte-desc">Formulaire Survey123 pour le suivi des opérations sylvicoles : saisie du nombre de tiges de bois sur pied et de bois abattu, avec ajout d'entités liées pour un suivi détaillé tige par tige.</p>
+            <div class="projet-carte-tags"><span>Survey123</span><span>Suivi sylvicole</span><span>Terrain</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/modele-donnees-foncier.jpg"
+                 alt="Modèle de données foncier">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2023 — 2024 · ONF</span>
+            <div class="projet-carte-titre">Modèle de données foncier (géodatabase)</div>
+            <p class="projet-carte-desc">Structuration d'une géodatabase ArcGIS pour la gestion des données foncières (parcelles, lots, unités de gestion, relations) supportant les procédures de soumissions, aliénations et échanges.</p>
+            <div class="projet-carte-tags"><span>Géodatabase</span><span>Modèle de données</span><span>SQL</span><span>Merise</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/recre-lizmap.jpg"
+                 alt="Application RECRE Lizmap">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2022 · Tribu Concevoir Durable</span>
+            <div class="projet-carte-titre">RECRE — Renaturation des espaces de cours</div>
+            <p class="projet-carte-desc">Publication d'une application cartographique interactive (Lizmap / QGIS Server) pour le projet RECRE, visualisant l'existant, les scénarios de renaturation et une zone tampon de 500 m à l'échelle de l'Île-de-France.</p>
+            <div class="projet-carte-tags"><span>Lizmap</span><span>QGIS Server</span><span>Cartographie web</span></div>
+          </div>
+        </div>
+
+        <div class="projet-carte">
+          <div class="projet-carte-img-wrap">
+            <img class="img-fallback" data-fallback="Capture à ajouter"
+                 src="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/modelisation-biomasse-azote.jpg"
+                 alt="Modélisation biomasse et conseil azoté">
+          </div>
+          <div class="projet-carte-body">
+            <span class="projet-carte-meta">2023 · Wanaka</span>
+            <div class="projet-carte-titre">Modélisation biomasse &amp; conseil azoté</div>
+            <p class="projet-carte-desc">Méthodologie combinant données satellites (bandes S2REP, indice LAI) et données de potentiel de sol pour produire un conseil de fertilisation azotée zoné sur cultures de colza et de blé.</p>
+            <div class="projet-carte-tags"><span>Landsat 8/9</span><span>Google Earth Engine</span><span>Python</span><span>R</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
 
     <!-- ============ CERTIFICATIONS ============ -->
     <section id="certifications">
-      <span class="coord tl">04 / CERTIFICATIONS</span>
+      <span class="coord tl">05 / CERTIFICATIONS</span>
       <div class="section-head">
-        <span class="indice">04</span>
+        <span class="indice">05</span>
         <h2>Certifications</h2>
         <span class="ligne"></span>
       </div>
@@ -1419,7 +1648,7 @@ section{
 
     <!-- ============ CONTACT ============ -->
     <section id="contact" style="border-bottom:none;">
-      <span class="coord tl">05 / CONTACT</span>
+      <span class="coord tl">06 / CONTACT</span>
       <div class="contact-section">
         <h2>Discutons de votre prochain projet géospatial.</h2>
         <div class="contact-liens">
@@ -1892,6 +2121,31 @@ document.querySelectorAll('img.img-fallback').forEach(function(img){
     });
   }, { threshold: 0.3 });
   sections.forEach(function(s){ observer.observe(s); });
+})();
+</script>
+
+<!-- Lightbox pour agrandir les captures de projets -->
+<div id="lightbox-overlay">
+  <button class="lightbox-close" id="lightbox-close-btn">✕ Fermer</button>
+  <img id="lightbox-img" src="" alt="Aperçu du projet">
+</div>
+<script>
+(function(){
+  var overlay = document.getElementById('lightbox-overlay');
+  var imgEl = document.getElementById('lightbox-img');
+  var closeBtn = document.getElementById('lightbox-close-btn');
+  if(!overlay) return;
+  document.querySelectorAll('.projet-carte-img-wrap img').forEach(function(img){
+    img.addEventListener('click', function(){
+      imgEl.src = img.src;
+      imgEl.alt = img.alt;
+      overlay.classList.add('ouvert');
+    });
+  });
+  function fermer(){ overlay.classList.remove('ouvert'); imgEl.src=''; }
+  closeBtn.addEventListener('click', fermer);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) fermer(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') fermer(); });
 })();
 </script>
 </body>
