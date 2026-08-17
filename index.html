@@ -944,6 +944,114 @@ section{
   background:none;
 }
 
+/* ===================== FORMULAIRE DE CONTACT (modal) ===================== */
+#contact-modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(28,43,36,0.85);
+  display:none;
+  align-items:center;justify-content:center;
+  z-index:2100;
+  padding:1.5rem;
+}
+#contact-modal-overlay.ouvert{display:flex;}
+.contact-modal{
+  background:var(--blanc);
+  border-radius:6px;
+  max-width:460px;
+  width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  position:relative;
+  box-shadow:0 10px 40px rgba(0,0,0,0.35);
+}
+.contact-modal-head{
+  padding:1.6rem 1.8rem 1rem;
+  border-bottom:1px solid var(--ligne);
+}
+.contact-modal-head h3{
+  font-family:var(--display);
+  font-weight:600;
+  font-size:1.4rem;
+  color:var(--encre);
+}
+.contact-modal-head p{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  color:var(--ardoise);
+  margin-top:0.4rem;
+}
+.contact-modal-close{
+  position:absolute;
+  top:1rem;right:1.1rem;
+  background:var(--ivoire-2);
+  border:1px solid var(--ligne);
+  border-radius:50%;
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:16px;
+  color:var(--encre);
+  transition:background 0.15s,color 0.15s;
+}
+.contact-modal-close:hover{background:var(--terracotta);color:#fff;border-color:var(--terracotta);}
+.contact-form{padding:1.5rem 1.8rem 1.8rem;}
+.cf-field{margin-bottom:1.1rem;display:flex;flex-direction:column;gap:0.4rem;}
+.cf-field label{
+  font-family:var(--mono);
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:var(--encre-soft);
+}
+.cf-field label .req{color:var(--terracotta);}
+.cf-field input,
+.cf-field textarea{
+  font-family:var(--corps);
+  font-size:0.92rem;
+  color:var(--encre);
+  background:var(--ivoire);
+  border:1px solid var(--ligne);
+  border-radius:4px;
+  padding:0.65rem 0.8rem;
+  resize:vertical;
+  transition:border-color 0.15s;
+  width:100%;
+}
+.cf-field input:focus,
+.cf-field textarea:focus{
+  outline:none;
+  border-color:var(--terracotta);
+}
+.cf-field textarea{min-height:110px;}
+.cf-honeypot{display:none !important;}
+.cf-submit{
+  width:100%;
+  font-family:var(--mono);
+  font-size:0.8rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  background:var(--encre);
+  color:var(--ivoire);
+  border:none;
+  padding:0.8rem 1.4rem;
+  border-radius:3px;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.cf-submit:hover{background:var(--terracotta);}
+.cf-submit:disabled{opacity:0.6;cursor:wait;}
+.cf-feedback{
+  margin-top:1rem;
+  font-family:var(--mono);
+  font-size:0.78rem;
+  padding:0.7rem 0.9rem;
+  border-radius:4px;
+  display:none;
+}
+.cf-feedback.ok{display:block;background:#e5efe8;color:#1c2b24;border:1px solid #9fbca9;}
+.cf-feedback.err{display:block;background:#f7e6df;color:#7a2c12;border:1px solid #d99672;}
+#open-contact-form-btn{cursor:pointer;border:none;font-family:var(--mono);}
+
 /* ===================== CONTACT / FOOTER ===================== */
 .contact-section{
   display:flex;
@@ -1652,6 +1760,7 @@ section{
       <div class="contact-section">
         <h2>Discutons de votre prochain projet géospatial.</h2>
         <div class="contact-liens">
+          <button type="button" id="open-contact-form-btn" class="btn-primary">✉ Envoyer un message</button>
           <a href="mailto:mamadouba7001@gmail.com"><span class="ico">✉</span> mamadouba7001@gmail.com</a>
           <a href="https://www.linkedin.com/in/mamadou-ba-g%C3%A9omatique-t%C3%A9l%C3%A9d%C3%A9tection/" target="_blank" rel="noopener"><span class="ico">in</span> linkedin.com/in/mamadou-ba</a>
           <a href="https://raw.githubusercontent.com/mamadouba1/portfolio-/main/BA%20MAMADOU%20CV.pdf" download="Mamadou_BA_CV.pdf"><span class="ico">↓</span> Télécharger mon CV (PDF)</a>
@@ -2145,6 +2254,95 @@ document.querySelectorAll('img.img-fallback').forEach(function(img){
   closeBtn.addEventListener('click', fermer);
   overlay.addEventListener('click', function(e){ if(e.target === overlay) fermer(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') fermer(); });
+})();
+</script>
+
+<!-- Formulaire de contact (modal) -->
+<div id="contact-modal-overlay">
+  <div class="contact-modal">
+    <button type="button" class="contact-modal-close" id="contact-modal-close-btn" title="Fermer">✕</button>
+    <div class="contact-modal-head">
+      <h3>Envoyer un message</h3>
+      <p>Tous les champs sont obligatoires — je réponds rapidement.</p>
+    </div>
+    <form class="contact-form" id="contact-form">
+      <!-- IMPORTANT : remplace la valeur ci-dessous par ta clé Web3Forms (web3forms.com) -->
+      <input type="hidden" name="access_key" value="a4e1c48e-cbc6-4b5e-98ad-6e8e09ead00f">
+      <input type="hidden" name="subject" value="Nouveau message depuis le portfolio">
+      <input type="checkbox" name="botcheck" class="cf-honeypot" tabindex="-1" autocomplete="off">
+
+      <div class="cf-field">
+        <label for="cf-nom">Nom et prénom <span class="req">*</span></label>
+        <input type="text" id="cf-nom" name="name" required placeholder="Nom Prénom">
+      </div>
+
+      <div class="cf-field">
+        <label for="cf-structure">Structure / Organisation <span class="req">*</span></label>
+        <input type="text" id="cf-structure" name="structure" required placeholder="Votre structure">
+      </div>
+
+      <div class="cf-field">
+        <label for="cf-message">Message <span class="req">*</span></label>
+        <textarea id="cf-message" name="message" required placeholder="Votre message..."></textarea>
+      </div>
+
+      <button type="submit" class="cf-submit" id="cf-submit-btn">Envoyer</button>
+      <div class="cf-feedback" id="cf-feedback"></div>
+    </form>
+  </div>
+</div>
+<script>
+(function(){
+  var openBtn = document.getElementById('open-contact-form-btn');
+  var overlay = document.getElementById('contact-modal-overlay');
+  var closeBtn = document.getElementById('contact-modal-close-btn');
+  var form = document.getElementById('contact-form');
+  var submitBtn = document.getElementById('cf-submit-btn');
+  var feedback = document.getElementById('cf-feedback');
+  if(!openBtn || !overlay || !form) return;
+
+  function ouvrir(){ overlay.classList.add('ouvert'); document.body.style.overflow = 'hidden'; }
+  function fermer(){ overlay.classList.remove('ouvert'); document.body.style.overflow = ''; }
+
+  openBtn.addEventListener('click', ouvrir);
+  closeBtn.addEventListener('click', fermer);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) fermer(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('ouvert')) fermer(); });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    feedback.className = 'cf-feedback';
+    feedback.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi en cours...';
+
+    var formData = new FormData(form);
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: formData
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data.success) {
+        feedback.textContent = 'Message envoyé ! Merci, je reviens vers vous rapidement.';
+        feedback.className = 'cf-feedback ok';
+        form.reset();
+        setTimeout(fermer, 2200);
+      } else {
+        feedback.textContent = "Une erreur est survenue. Réessayez ou écrivez directement à mamadouba7001@gmail.com.";
+        feedback.className = 'cf-feedback err';
+      }
+    })
+    .catch(function(){
+      feedback.textContent = "Une erreur réseau est survenue. Réessayez ou écrivez directement à mamadouba7001@gmail.com.";
+      feedback.className = 'cf-feedback err';
+    })
+    .finally(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Envoyer';
+    });
+  });
 })();
 </script>
 </body>
