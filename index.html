@@ -36,6 +36,11 @@ body{font-family:var(--corps);color:var(--encre);background:var(--sable);line-he
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--topo) center/cover no-repeat}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 8% 12%,rgba(61,155,224,.13),transparent 40%),radial-gradient(circle at 92% 88%,rgba(224,112,47,.12),transparent 42%)}
 main,footer{position:relative;z-index:1}
+#bg-map{position:fixed;inset:0;z-index:-2;pointer-events:none;background:#cfd8d3}
+#bg-veil{position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgba(245,242,234,.8);transition:background .9s}
+body[data-page="accueil"] #bg-veil{background:rgba(245,242,234,.5)}
+body[data-page="contact"] #bg-veil{background:rgba(245,242,234,.62)}
+footer .credit{font-size:.62rem;opacity:.8}
 .page{display:none}
 .page.active{display:block;animation:pg .45s ease}
 @keyframes pg{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -75,7 +80,7 @@ nav.main{display:flex;gap:.2rem}
 .burger{display:none;background:none;border:1px solid var(--ligne);border-radius:6px;font-size:1.3rem;width:44px;height:44px;cursor:pointer;color:var(--vert)}
 
 /* ============ HERO ============ */
-.hero{position:relative;background:linear-gradient(135deg,var(--vert) 0%,#12503c 55%,#1c6a8a 130%);color:#fff;overflow:hidden}
+.hero{position:relative;background:linear-gradient(135deg,rgba(15,61,46,.88) 0%,rgba(18,80,60,.84) 55%,rgba(28,106,138,.78) 130%);color:#fff;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:0;background:var(--topo-w) center/cover no-repeat}
 .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(61,155,224,.35),transparent 65%)}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:5rem 2rem 6.5rem;display:grid;grid-template-columns:1.25fr .75fr;gap:3.5rem;align-items:center}
@@ -289,6 +294,7 @@ footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-c
 </style>
 </head>
 <body>
+<div id="bg-map" aria-hidden="true"></div><div id="bg-veil"></div>
 
 <!-- ================= EN-TÊTE HORIZONTAL ================= -->
 <header class="top">
@@ -373,7 +379,7 @@ footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-c
     </aside>
     <div class="profil-texte">
       <p>Géomaticien spécialisé en <strong>télédétection et géomatique appliquées à l'environnement</strong>, je travaille depuis octobre 2023 comme <strong>Responsable Géomatique et Foncier</strong> à l'Agence Territoriale de Compiègne de l'<strong>Office national des forêts (ONF)</strong>. J'administre plusieurs <strong>bases de données géographiques</strong>, pilote le <strong>réseau SIG</strong> et accompagne les équipes par la formation et l'appui technique. Je développe aussi des <strong>applications web et mobiles cartographiques</strong> pour les agences de la Direction Territoriale Seine Nord, et j'interviens sur les <strong>procédures foncières</strong> : soumissions, distractions, aliénations, échanges, PLUi, SCoT et projets éoliens.</p>
-      <p>Mon parcours combine formation en <strong>géomatique, télédétection, environnement et aménagement du territoire</strong> et plus de <strong>3 ans d'expérience</strong> en SIG, télédétection, bases de données spatiales et développement cartographique. Chez Wanaka, j'ai travaillé sur l'<strong>estimation de biomasse de colza à partir d'images Landsat 8 et 9</strong> et l'automatisation du conseil en fertilisation azotée.</p>
+      <p>Mon parcours combine formation en <strong>géomatique, télédétection, environnement et aménagement du territoire</strong> et plus de <strong>5 ans d'expérience</strong> en SIG, télédétection, bases de données spatiales et développement cartographique. Chez Wanaka, j'ai travaillé sur l'<strong>estimation de biomasse de colza à partir d'images Landsat 8 et 9</strong> et l'automatisation du conseil en fertilisation azotée.</p>
       <p>Mes expériences en France et au Sénégal m'ont donné une <strong>forte approche de terrain</strong> : collecte de données géolocalisées, cartographie, modélisation spatiale et étude des interactions entre <strong>territoires, environnement et infrastructures</strong>.</p>
     </div>
   </div>
@@ -381,15 +387,15 @@ footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-c
   <div id="outils" style="margin-top:3.5rem"><h3 style="font-family:var(--display);font-size:1.5rem;color:var(--vert)">Outils &amp; technologies</h3>
     <div class="tools">
       <div class="tool"><b>SIG &amp; cartographie</b><p>ArcGIS Pro · ArcGIS Enterprise · QGIS</p></div>
-      <div class="tool"><b>Programmation</b><p>Python · Html - ArcPy · PyQGIS - R-Studio - CSS - JS </p></div>
-      <div class="tool"><b>Bases de données spatiales</b><p>PostGresSQL · Géodatabase - Geopackage</p></div>
-      <div class="tool"><b>Web &amp; diffusion</b><p>Lizmap · QGIS Server · Experience Builder - WebApp Builder</p></div>
-      <div class="tool"><b>Télédétection</b><p>Google Earth Engine · Landsat - Sentinel - Lidar </p></div>
+      <div class="tool"><b>Programmation</b><p>Python · ArcPy · PyQGIS</p></div>
+      <div class="tool"><b>Bases de données spatiales</b><p>PostGIS · géodatabases</p></div>
+      <div class="tool"><b>Web &amp; diffusion</b><p>Lizmap · QGIS Server · Experience Builder</p></div>
+      <div class="tool"><b>Télédétection</b><p>Google Earth Engine · Landsat 8/9</p></div>
     </div>
   </div>
   <div id="veille" style="margin-top:2.5rem"><h3 style="font-family:var(--display);font-size:1.5rem;color:var(--vert)">Veille &amp; enjeux</h3>
     <div class="tools">
-      <div class="tool"><b>🌍 Observation de la Terre</b><p>Lidar, Sentinel, Landsat, Modis</p></div>
+      <div class="tool"><b>🌍 Observation de la Terre</b><p>Sentinel · Copernicus</p></div>
       <div class="tool"><b>🤖 Intelligence artificielle</b><p>IA appliquée à la télédétection</p></div>
       <div class="tool"><b>🔗 Open source</b><p>Standards · interopérabilité</p></div>
       <div class="tool"><b>🌲 Forêts &amp; climat</b><p>Adaptation · suivi environnemental</p></div>
@@ -457,7 +463,7 @@ footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-c
 
 </main>
 
-<footer><span>© 2026 Mamadou Ba</span><span>Tous droits réservés © 2026</span></footer>
+<footer><span>© 2026 Mamadou Ba</span><span class="credit">Fonds de carte : © OpenStreetMap · © CARTO · Esri, Maxar</span><span>Tous droits réservés © 2026</span></footer>
 
 <div id="lightbox"><img id="lightbox-img" src="" alt=""></div>
 
@@ -555,6 +561,7 @@ var CERTS=[
     if(!document.getElementById('page-'+id))id='accueil';
     pages.forEach(function(p){p.classList.toggle('active',p.id==='page-'+id);});
     navs.forEach(function(a){a.classList.toggle('active',a.dataset.p===id);});
+    document.body.dataset.page=id;if(window.__bgGo)window.__bgGo(id);
     window.scrollTo({top:0,behavior:'instant'});
     if(id==='parcours'&&window.__mapRefresh)setTimeout(window.__mapRefresh,60);
     try{history.replaceState(null,'','#'+id);}catch(e){}
@@ -679,6 +686,41 @@ window.__mapRefresh=function(){map.invalidateSize();map.fitBounds(bounds,{paddin
       else{fb.textContent="Une erreur est survenue. Écrivez directement à mamadouba7001@gmail.com.";fb.className='cfb err';}})
     .catch(function(){fb.textContent="Erreur réseau. Écrivez directement à mamadouba7001@gmail.com.";fb.className='cfb err';})
     .finally(function(){sb.disabled=false;sb.textContent='Envoyer';});});
+})();
+
+/* =============== CARTE DE FOND (change à chaque page) =============== */
+(function(){
+  if(typeof L==='undefined')return;
+  var el=document.getElementById('bg-map');
+  var reduit=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,inertia:false});
+  var T={
+    carto:['https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}],
+    osm:['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}],
+    ortho:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}],
+    topo:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}]
+  };
+  /* un lieu + un fond par page : à modifier ici */
+  var CFG={
+    accueil:{c:[49.37,2.90],z:12,t:'ortho'},          /* forêt de Compiègne — orthophoto */
+    competences:{c:[48.8566,2.3522],z:11,t:'carto'},   /* Paris — plan gris */
+    parcours:{c:[14.7167,-17.4677],z:11,t:'osm'},      /* Dakar — OpenStreetMap */
+    projets:{c:[48.40,2.65],z:11,t:'topo'},            /* forêt de Fontainebleau — carte topo */
+    certifications:{c:[45.19,5.72],z:10,t:'ortho'},    /* Grenoble / Alpes — orthophoto */
+    contact:{c:[49.4138,2.8276],z:13,t:'carto'}        /* Compiègne — plan gris */
+  };
+  var layers={},cur=null,first=true;
+  function layer(k){return layers[k]||(layers[k]=L.tileLayer(T[k][0],Object.assign({opacity:1},T[k][1])));}
+  window.__bgGo=function(id){
+    var c=CFG[id]||CFG.accueil,l=layer(c.t);
+    if(first||reduit){map.setView(c.c,c.z,{animate:false});first=false;}
+    else map.flyTo(c.c,c.z,{duration:2.4});
+    if(cur!==l){
+      var old=cur;l.addTo(map);cur=l;
+      if(old)setTimeout(function(){if(old!==cur)map.removeLayer(old);},1400);
+    }
+  };
+  window.__bgGo(document.body.dataset.page||'accueil');
 })();
 </script>
 </body>
