@@ -33,13 +33,11 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:var(--hh)}
 body{font-family:var(--corps);color:var(--encre);background:var(--sable);line-height:1.6;overflow-x:hidden;position:relative}
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--topo) center/cover no-repeat}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 8% 12%,rgba(61,155,224,.13),transparent 40%),radial-gradient(circle at 92% 88%,rgba(224,112,47,.12),transparent 42%)}
 main,footer{position:relative;z-index:1}
 #bg-map{position:fixed;inset:0;z-index:-2;pointer-events:none;background:#cfd8d3}
-#bg-veil{position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgba(245,242,234,.8);transition:background .9s}
-body[data-page="accueil"] #bg-veil{background:rgba(245,242,234,.5)}
-body[data-page="contact"] #bg-veil{background:rgba(245,242,234,.62)}
+#bg-veil{position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgba(245,242,234,.18);transition:background .9s}
+body[data-page="accueil"] #bg-veil{background:rgba(245,242,234,.05)}
 footer .credit{font-size:.62rem;opacity:.8}
 .page{display:none}
 .page.active{display:block;animation:pg .45s ease}
@@ -80,8 +78,7 @@ nav.main{display:flex;gap:.2rem}
 .burger{display:none;background:none;border:1px solid var(--ligne);border-radius:6px;font-size:1.3rem;width:44px;height:44px;cursor:pointer;color:var(--vert)}
 
 /* ============ HERO ============ */
-.hero{position:relative;background:linear-gradient(135deg,rgba(15,61,46,.88) 0%,rgba(18,80,60,.84) 55%,rgba(28,106,138,.78) 130%);color:#fff;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;background:var(--topo-w) center/cover no-repeat}
+.hero{position:relative;background:linear-gradient(90deg,rgba(15,61,46,.93) 0%,rgba(15,61,46,.82) 45%,rgba(18,80,60,.42) 100%);color:#fff;overflow:hidden}
 .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(61,155,224,.35),transparent 65%)}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:5rem 2rem 6.5rem;display:grid;grid-template-columns:1.25fr .75fr;gap:3.5rem;align-items:center}
 .eyebrow{font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;color:#ffb98c;display:flex;align-items:center;gap:.6rem;margin-bottom:1.3rem}
@@ -117,8 +114,9 @@ nav.main{display:flex;gap:.2rem}
 /* ============ SECTIONS ============ */
 section.bloc{padding:5.5rem 2rem 1rem}
 .wrap{max-width:1280px;margin:0 auto}
-.sec-head{display:flex;align-items:flex-end;gap:1.2rem;margin-bottom:2.8rem;border-bottom:2px solid var(--ligne);padding-bottom:1.1rem;position:relative}
-.sec-head::after{content:"";position:absolute;left:0;bottom:-2px;width:90px;height:2px;background:var(--terracotta)}
+.sec-head{display:flex;align-items:flex-end;gap:1.2rem;margin-bottom:2.8rem;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--ligne);border-radius:14px;padding:1.1rem 1.6rem 1.3rem;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(15,61,46,.08)}
+.sec-head::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:3px;background:linear-gradient(90deg,var(--terracotta) 0,var(--terracotta) 90px,transparent 90px)}
+#outils>h3,#veille>h3{display:inline-block;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:.5rem 1.1rem;border-radius:10px;border:1px solid var(--ligne)}
 .sec-num{font-family:var(--display);font-size:3.8rem;font-weight:700;line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--bleu-clair);opacity:.7}
 .sec-head h2{font-family:var(--display);font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:600;color:var(--vert)}
 .sec-head p{margin-left:auto;font-family:var(--mono);font-size:.75rem;color:var(--gris);max-width:34ch;text-align:right}
@@ -237,12 +235,11 @@ section.bloc{padding:5.5rem 2rem 1rem}
 
 /* Contact */
 .contact{background:linear-gradient(135deg,var(--vert),#164d63);color:#fff;border-radius:22px;padding:4rem 3rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;position:relative;overflow:hidden}
-.contact::before{content:"";position:absolute;inset:0;background:var(--topo-w) center/cover no-repeat}
 .contact h2{font-family:var(--display);font-size:clamp(1.9rem,4vw,3rem);max-width:17ch;line-height:1.1;position:relative}
 .contact h2 em{color:#ffb98c}
 .c-actions{display:flex;flex-direction:column;gap:.8rem;position:relative;min-width:260px}
 .c-actions .btn{text-align:center}
-footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--gris)}
+footer{max-width:1280px;margin:3rem auto 0;padding:1.2rem 2rem;display:flex;justify-content:space-between;gap:1rem;font-family:var(--mono);font-size:.7rem;color:var(--gris);background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:14px 14px 0 0}
 
 /* Formulaire */
 #cm-overlay{position:fixed;inset:0;background:rgba(15,40,30,.85);display:none;align-items:center;justify-content:center;z-index:3100;padding:1.5rem}
@@ -463,7 +460,7 @@ footer{max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-c
 
 </main>
 
-<footer><span>© 2026 Mamadou Ba</span><span class="credit">Fonds de carte : © OpenStreetMap · © CARTO · Esri, Maxar</span><span>Tous droits réservés © 2026</span></footer>
+<footer><span>© 2026 Mamadou Ba</span><span>Tous droits réservés © 2026</span></footer>
 
 <div id="lightbox"><img id="lightbox-img" src="" alt=""></div>
 
@@ -545,15 +542,6 @@ var CERTS=[
   var nav=document.getElementById('mainnav');
   document.getElementById('burger').addEventListener('click',function(){nav.classList.toggle('open');});
   nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');});});
-
-  /* fond topographique (courbes de niveau) */
-  function topo(color,op){
-    var g='';[[300,260],[930,560]].forEach(function(c){for(var r=30;r<=560;r+=34){g+='<ellipse cx="'+c[0]+'" cy="'+c[1]+'" rx="'+(r*1.25)+'" ry="'+r+'"/>';}});
-    var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice"><defs><filter id="w" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.0045 0.006" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="130"/></filter></defs><g fill="none" stroke="'+color+'" stroke-opacity="'+op+'" stroke-width="1.3" filter="url(#w)">'+g+'</g></svg>';
-    return 'url("data:image/svg+xml,'+encodeURIComponent(svg)+'")';
-  }
-  document.documentElement.style.setProperty('--topo',topo('#0F3D2E',.14));
-  document.documentElement.style.setProperty('--topo-w',topo('#ffffff',.22));
 
   /* navigation par pages */
   var pages=document.querySelectorAll('.page'),navs=document.querySelectorAll('nav.main > .nav-item > a');
@@ -694,27 +682,41 @@ window.__mapRefresh=function(){map.invalidateSize();map.fitBounds(bounds,{paddin
   var el=document.getElementById('bg-map');
   var reduit=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
   var map=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,touchZoom:false,inertia:false});
+  /* [url, options, filtre CSS optionnel] */
   var T={
-    carto:['https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}],
-    osm:['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}],
-    ortho:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}],
-    topo:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}]
+    osmgris:['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19},'grayscale(1) contrast(1.12)'],
+    osm:['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19},null],
+    ortho:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19},null],
+    topo:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19},null]
   };
-  /* un lieu + un fond par page : à modifier ici */
+  /* un lieu + un fond par page : à modifier ici (c = centre, z = zoom, b = emprise) */
   var CFG={
-    accueil:{c:[49.37,2.90],z:12,t:'ortho'},          /* forêt de Compiègne — orthophoto */
-    competences:{c:[48.8566,2.3522],z:11,t:'carto'},   /* Paris — plan gris */
-    parcours:{c:[14.7167,-17.4677],z:11,t:'osm'},      /* Dakar — OpenStreetMap */
-    projets:{c:[48.40,2.65],z:11,t:'topo'},            /* forêt de Fontainebleau — carte topo */
-    certifications:{c:[45.19,5.72],z:10,t:'ortho'},    /* Grenoble / Alpes — orthophoto */
-    contact:{c:[49.4138,2.8276],z:13,t:'carto'}        /* Compiègne — plan gris */
+    accueil:{c:[49.37,2.90],z:12,t:'ortho'},                 /* Compiègne — orthophoto */
+    competences:{c:[48.8566,2.3522],z:12,t:'osmgris'},       /* Paris — OSM en gris */
+    parcours:{c:[14.7167,-17.4677],z:11,t:'osm'},            /* Dakar — OpenStreetMap */
+    projets:{c:[47.9025,1.9090],z:11,t:'topo'},              /* Orléans — carte topo */
+    certifications:{c:[49.4432,1.0993],z:11,t:'ortho'},      /* Rouen — orthophoto */
+    contact:{b:[[41.3,-5.3],[51.2,9.7]],t:'osmgris'}         /* France entière — OSM en gris */
   };
   var layers={},cur=null,first=true;
-  function layer(k){return layers[k]||(layers[k]=L.tileLayer(T[k][0],Object.assign({opacity:1},T[k][1])));}
+  function layer(k){
+    if(layers[k])return layers[k];
+    var l=L.tileLayer(T[k][0],Object.assign({opacity:1},T[k][1]));
+    if(T[k][2])l.on('add',function(){l.getContainer().style.filter=T[k][2];});
+    return layers[k]=l;
+  }
+  function vue(c,anim){
+    if(c.b){
+      if(anim)map.flyToBounds(c.b,{duration:2.4,padding:[20,20]});
+      else map.fitBounds(c.b,{animate:false,padding:[20,20]});
+    }else{
+      if(anim)map.flyTo(c.c,c.z,{duration:2.4});
+      else map.setView(c.c,c.z,{animate:false});
+    }
+  }
   window.__bgGo=function(id){
     var c=CFG[id]||CFG.accueil,l=layer(c.t);
-    if(first||reduit){map.setView(c.c,c.z,{animate:false});first=false;}
-    else map.flyTo(c.c,c.z,{duration:2.4});
+    vue(c,!(first||reduit));first=false;
     if(cur!==l){
       var old=cur;l.addTo(map);cur=l;
       if(old)setTimeout(function(){if(old!==cur)map.removeLayer(old);},1400);
